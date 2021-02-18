@@ -33,15 +33,25 @@ class MyScene extends Phaser.Scene {
         
         // Make the camera shake when clicking/tapping on it.
         this.bouncy.setInteractive();
-        this.bouncy.on( 'pointerdown', function( pointer ) {
-            this.scene.cameras.main.shake(500);
-            });
+        //this.bouncy.on( 'pointerdown', function( pointer ) {
+        //    this.scene.cameras.main.shake(500);
+        //    });
         
         // Add some text using a CSS style.
         // Center it in X, and position its top 15 pixels from the top of the world.
         let style = { font: "25px Verdana", fill: "#9999ff", align: "center" };
         let text = this.add.text( this.cameras.main.centerX, 15, "Hello, James Moles.", style );
         text.setOrigin( 0.5, 0.0 );
+		
+		this.input.on('pointerdown', function (pointer) {
+			this.physics.moveTo(this.bouncy, pointer, 200);
+		}, this);
+		
+		this.input.on('pointerup', function (pointer) {
+			this.bouncy.setVelocityX(0);
+			this.bouncy.setVelocityY(0);
+		});
+		
     }
     
     update() {
@@ -50,8 +60,10 @@ class MyScene extends Phaser.Scene {
         // in X or Y.
         // This function returns the rotation angle that makes it visually match its
         // new trajectory.
-        this.bouncy.rotation = this.physics.accelerateToObject( this.bouncy, this.input.activePointer, 500, 500, 500 );
-    }
+        // this.bouncy.rotation = this.physics.accelerateToObject( this.bouncy, this.input.activePointer, 500, 500, 500 );
+		
+		
+	}
 }
 
 const game = new Phaser.Game({
