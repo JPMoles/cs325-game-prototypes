@@ -37,6 +37,8 @@ var desert; // finish zone
 var space; // finish zone
 var pins;
 var music;
+var finished;
+var collided = false;
 
 
 var game = new Phaser.Game(config);
@@ -96,6 +98,7 @@ function create () {
 	oasis.setCollideWorldBounds(true);
 	oasis.setBounce(0.8);
 	
+	// learned how to do mouse input from this example: https://phaser.io/examples/v3/view/physics/arcade/move-to-pointer
 	this.input.on('pointerdown', function (pointer) {
 		if(oasis.body.x < 150) {
 			this.physics.moveToObject(oasis, pointer, 250);
@@ -118,18 +121,20 @@ function pinBounce(oasis, pin) {
 }
 
 function finishSpace(oasis, space) {
-	if(oasis.body.x > 1110) {
+	if(oasis.body.x > 1110 && collided === false) {
 		this.physics.pause();
 		oasis.setTint(0xff0000);
 		this.add.text(150, 250, 'The Oasis has been lost!', { fontSize: '64px', fill: '#FF0000' });
+		collided = true;
 	}
 }
 
 function finishDesert(oasis, desert) {
-	if(oasis.body.x > 1110) {
+	if(oasis.body.x > 1110 && collided === false) {
 		this.physics.pause();
 		oasis.setTint(0x00ff00);
 		this.add.text(500, 250, 'SUCCESS', { fontSize: '64px', fill: '#00FF00' });
+		collided = true;
 	}
 }
 
