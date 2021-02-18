@@ -44,7 +44,7 @@ var collided = false;
 var game = new Phaser.Game(config);
 
 function preload () {
-    this.load.image('oasis', 'assets/oasis.png');
+    this.load.image('oasis', 'assets/Oasis.png');
 	this.load.image('wall', 'assets/starting_post.png');
 	this.load.image('desert', 'assets/desert_finish.png');
 	this.load.image('space', 'assets/space_finish.png');
