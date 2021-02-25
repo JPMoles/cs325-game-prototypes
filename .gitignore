@@ -1,4 +1,5 @@
 .DS_Store
-**/.idea/ # ignore webstorm stuff
 Thumbs.db
 *~
+/.idea
+**/.idea
