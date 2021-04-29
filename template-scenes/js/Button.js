@@ -12,10 +12,7 @@ export class Button extends Phaser.GameObjects.Sprite {
     scene.add.existing(this)
     this.inclick = false;
 
-    this.setFrame(outFrame)
-      .setInteractive()
-
-      .on('pointerover', () => {
+    this.setFrame(outFrame).setInteractive().on('pointerover', () => {
         this.onInputOver()
         if( this.inclick ) {
             this.setFrame(downFrame)

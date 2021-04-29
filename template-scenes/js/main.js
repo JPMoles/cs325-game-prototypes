@@ -1,8 +1,8 @@
 import "./phaser.js";
 import {Boot} from "./Boot.js";
 import {Game} from "./Game.js";
-import {MainMenu} from "./MainMenu.js";
-import {Preloader} from "./Preloader.js";
+import {MainMenu, Preloader} from "./MainMenu.js";
+// import {Preloader} from "./Preloader.js";
 
 // An object for shared (global) variables, so that them main menu can show
 // the high score if you want.

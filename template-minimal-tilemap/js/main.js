@@ -25,9 +25,9 @@ class MyScene extends Phaser.Scene {
         
         // Load a tilemap and call it 'map'.
         // You can load from Tiled's JSON format:
-        this.load.tilemapTiledJSON( 'map', 'assets/tilemap_example.json' );
+        //this.load.tilemapTiledJSON( 'map', 'assets/tilemap_example.json' );
         // Or from a .csv file:
-        // this.load.tilemapCSV( 'map', 'assets/tilemap_example.csv' );
+        this.load.tilemapCSV( 'map', 'assets/tilemap_example.csv' );
         
         // Load the tiles (images) for the map.
         this.load.image( 'tiles', 'assets/tiles.png' );
