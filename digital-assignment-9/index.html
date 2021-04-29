@@ -24,19 +24,23 @@ body
 <ul>
 <li><strong>Originality:</strong>
 What is original about your game?
-    My game is about farming as many plants as you can before time runs out. You have 5 rounds to get as many points as possible.
+    <p>My game is about farming as many fully grown plants as you can before all 5 rounds are over. Try and get as many points as you can! The game is meant to be slow paced, which is why I chose relaxing music. The premise of the game provides a comedy element in the form of the chickens stealing your plants.</p>
 </li>
 
 <li><strong>Technical Merit:</strong>
 What is interesting about your game technology?
-    The plant system was the most interesting part of this game. To have it interact with both the player and chickens was a difficult task.
-    Each plant grows from a different seed, and they each give varying points when collected. Also, having all growth and player movement stop
-    when the chickens start cross was unique.
+    <p>The plant system was the most interesting and intricate part of this game. To have it interact with both the player and chickens was a difficult task.
+    Each plant grows from a different seed, and they each give varying points when collected. Also, having all growth stages and player movement stop
+        when the chickens start crossing was unique. Having a visual sensation of time passing was part of what I was trying to achieve and provide
+        in the game feel. Additionally, having the character only interact with tiles that can have plants and be watered took a lot of time. A few
+        hours were spent removing bugs as each tile can only be watered/planted once before being eating by the chickens or picked up in the final stage
+        by the player. I had also not worked with a timer, or interval updates, in my prior games, so I learned all that for this and applied it to the chicken
+        movement, plant growth stages, and timer/round management.</p>
 </li>
 
 <li><strong>Prototype Postmortem:</strong>
-What did you learn from this prototype? A lot!
-What was the easiest or hardest part of making it?
+    What did you learn from this prototype? <p>A lot! Specifically, using the update() function and its parameters in a lot of ways I hadn't realized would be beneficial. I've made games in java and C before, both with update functions that worked in similar ways.</p>
+    What was the easiest or hardest part of making it? <p>I feel the hardest part was fixing all the interactions with the plants. There were so many bugs when trying to require plants be placed on certain tiles, and then checking to make sure they were on watered ground. I think this would have been easier with a tile-map, but I worked on it for a considerable time before I switched to using arrays. The easiest and most fun part was drawing the sprites. I drew all the artwork for the game apart from the button which was a re-skin of one of the tutorial button images. Even though making the sprites was easy I found the artwork while simplistic had a positive appeal for this theme.</p>
 </li>
 
 <li><strong>Prototype Assets:</strong>
@@ -44,6 +48,7 @@ Did you make your prototype assets from scratch? Did you borrow them? Cite your 
 <ul>
     <li>Music: Menu music from - <a href="https://www.zapsplat.com/sound-effect-category/game-music-and-loops/page/3/" target="_blank">zapsplat.com</a></li>
     <li>Button tutorial - <a href="https://snowbillr.github.io/blog/2018-07-03-buttons-in-phaser-3/" target="_blank">Button tutorial</a></li>
+    <li>Button Image - <a href="https://jpmoles.github.io/cs325-game-prototypes/template-scenes/" target="_blank">Button Image shape</a></li>
     <li>Water splash noise - <a href="https://opengameart.org/content/water-splashes" target="_blank">Water splash</a></li>
     <li>Plant seeds noise - <a href="https://freesound.org/people/Arieeee/sounds/541849/" target="_blank">Seed noise</a></li>
     <li>Round ding - <a href="https://opengameart.org/content/completion-sound" target="_blank">Round bell</a></li>
@@ -51,50 +56,67 @@ Did you make your prototype assets from scratch? Did you borrow them? Cite your 
     <li>Chicken Clucking - <a href="https://freesound.org/people/RG2Cents/sounds/536501/" target="_blank">Chicken cluck</a></li>
 </ul>
 </li>
+<br>
 
 <li><strong>Prototype Closest Other Game:</strong>
 Which other game most closely resembles your game? If you are borrowing code from a Phaser Example, you must say so here. If you borrow code from elsewhere, you must say so here.
+    <p>I do not have a direct example I worked from apart from the scenes example provided to us. A lot of my game idea was taken from my analog assignment for this iteration. A lot of code was used from previous games, or I looked up how to do specific things, such as handling physics interactions. Also, utilizing the update(time, delta) parameters was very important in this game as the mechanics all revolved around time. I had not done this before in Phaser, but it was an enjoyable learning experience as it more directly translates from other programming languages with game update loops.</p>
+    <ul>
+        <li><a href="https://jpmoles.github.io/cs325-game-prototypes/template-scenes/" target="_blank">Scenes Example from provided repository</a></li>
+        <li><a href="https://snowbillr.github.io/blog/2018-07-03-buttons-in-phaser-3/" target="_blank">Button interactions</a></li>
+        <li><a href="https://rexrainbow.github.io/phaser3-rex-notes/docs/site/audio/" target="_blank">Audio help</a></li>
+        <li><a href="https://rexrainbow.github.io/phaser3-rex-notes/docs/site/group/">Group object interactions</a></li>
+    </ul>
 </li>
+    <br>
 
 <li><strong>High Concept:</strong>
-A one-sentence summary of your game: Chicken Farm is a laid back wasd planting game with a small twist that angry chickens will run over your greenery to eat them.
+A one-sentence summary of your game:
+    <p>Chicken Farm is a laid back keyboard-based 2D farming game with a small twist in which angry chickens run over your greenery in comedic style.</p>
 </li>
 
 <li><strong>Theme:</strong>
 State which of the Storymatic themes you used.
+    <p>Chicken Coop</p>
 </li>
 
 <li><strong>Mandated Variety:</strong>
 State which input, randomness, genre, and play style you used in this prototype.
+    <p>I used the keyboard input with the genre of overhead and animal farming. The gameplay is very random as the plants have varied growing times and the chickens come down different rows. The playstyle used is achiever.</p>
 </li>
 
 <li><strong>Prototype Goal:</strong>
 What game mechanic is this prototype evaluating?
+    <p>This prototype is evaluating time-based production and collection activities. Often in games it is one or the other that gets used for the game mechanic, but not both. For example, time-based production such as making hamburgers to server customers. An example for time-based collection is sonic trying to collect rings and finish the race. In both examples there is one or the other, but not both. Having both activities require the player to focus on two tasks that work in tandem, and this can create a new dynamic in the game. Also, there is usually some kind of opposition which in this case is the destruction of some crops, from the chickens, which provides motivation on top of the time limit for the player to plant with a strategy. This is since a chicken may remove all the plants from a whole row.</p>
 </li>
 
 <li><strong>Player Experience Goals:</strong>
 What experience do you want players to have when playing your game?
+    <p>I want players of my game to experience the enjoyment of slowly planting in a garden. The small set of antagonists serves to provide a little motivation to keep on planting! Placing different seeds should not feel different initially, but have a positive reward when collecting the plants in their final stages and seeing the point difference.</p>
 </li>
 
 <li><strong>Gameplay:</strong>
 A paragraph describing the actions the player can perform, the system dynamics, and the core mechanic. Include a concise explanation of the prototype’s inputs and their expected effects (how to play). You can also describe game play that is not in the prototype. You may include mock-up images for parts of the game not in the prototype.
+    <p>To start off, the keys for gameplay are WASD for movement. The letter P is for watering "pail" to water the tiles, so the plants can grow. They will not grow if not watered, and the player has unlimited water in their watering pail. The letter I is for placing the current seed that is selected. The letter O is for picking up the fully grown plants when you are on top of them. The number keys 1, 2, and 3 will select the different seeds at the bottom of the screen. ESC will take you back to the MainMenu from the Game scene. The mechanics of the game are relatively intuitive as you water and plant seeds they will grow after a few seconds to the next stage. Then after a few more seconds to the third stage. Finally, they will be fully grown and you can harvest them with O. The seeds that are selected by the red box around the square for each seed type determines which seeds get planted. Each seed results in a different fully grown plant. I felt it was important to provide some chance for the chickens to not cause harm to your plants, so I allowed them to go along the top and bottom row which cannot have plants. After the chickens pass a new round is started and the player has another 30 seconds to plant and collect plants. After 5 rounds have finished the player is shown their final score.</p>
 </li>
 
 <li><strong>Strategies:</strong>
 What player strategies do you expect will be effective at playing this game?
+    <p>I believe that players will run up and down the ground tile columns to placed seeds and water the plants as they go. It seems to be the most effective way to place lots of plants, and have a lower chance of them all being eaten by chickens. As the chickens eat the plants in rows, by plants in each column even if you miss a few fully grown plants you will still nearly maximize your score. A lot of your score is based on random score points from the green and red plants, as they provide points in a range. The blue plant provides a flat 8 points, which can be better if you get unlucky with the small sample size in one game. To get a really high score would require planting lots of the red seeds and getting all high rolls which is part of the fun!</p>
 </li>
 
 <li><strong>Story/Setting/Premise:</strong>
 A paragraph about the world your game is set in and who the characters are. What makes the game world and its occupants unique and interesting? Do the tokens represent something? If the game has a backstory, mention it here. If the game is abstract, then say so.
 How will the dramatic tension interact with the gameplay tension?
+    <p>The world is that of a garden which is located on a farm. A boy who lives on this farm seeks to find his green thumb through the planting of these strange seeds. He wants to grow as many as he can to preserve them. Unfortunately, his grandma who looks over him has a bad memory and leaves the door to the chicken coop open in the mornings. This results in the chickens, who the boy has despised since he was very young, to run through his garden eating and trampling his plants. The boy feels even with the flock of chickens harming his progress his garden can be fruitful through hardwork and determination. It's gardening and planting that brings this boy life and so he must grow just as the seeds he sows.</p>
 </li>
 
 <li><strong>Target Audience:</strong>
-A single sentence that describes the demographic you're trying to reach.
+    <p>This game is for people of all ages that enjoy slow-paced, country themed, 2d gameplay, without a competitive attitude.</p>
 </li>
 
 <li><strong>Play Time:</strong>
-How long does your game take to play? About 3 minutes :)
+    How long does your game take to play? <p>About 3-4 minutes to complete a playthrough :)</p>
 </li>
 
 </ul>

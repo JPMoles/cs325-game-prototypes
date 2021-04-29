@@ -430,7 +430,7 @@ export class Game extends Phaser.Scene {
             this.seedSound.play();
             this.plantsObjects.setDepth(2);
             let plant = this.plantsObjects.create(x, y, 'base_plant').setOrigin(0);
-            this.plants[xMultiple + (yMultiple * 10)] = new Plant(plant, xMultiple, yMultiple, this.growthTimer + 8, this.growthTimer, 0, this.seedSelected);
+            this.plants[xMultiple + (yMultiple * 10)] = new Plant(plant, xMultiple, yMultiple, this.growthTimer + Phaser.Math.Between(6, 9), this.growthTimer, 0, this.seedSelected);
         }
     }
 

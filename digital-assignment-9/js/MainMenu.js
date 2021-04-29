@@ -21,6 +21,7 @@ export class MainMenu extends Phaser.Scene {
         this.load.image('testGrid', 'assets/test_grid.png');
         this.load.image('chicken', 'assets/chicken_temp.png');
         this.load.image('player', 'assets/character_temp_front.png');
+        this.load.image("farm_filled_plants", "assets/farm_filled_plants.png");
         this.load.image("farm_background", "assets/farm_filled.png");
         this.load.image("chicken_left", "assets/chicken_temp_left.png");
         this.load.spritesheet("chicken_anim", "assets/chicken_animation.png", { frameWidth: 64, frameHeight: 64 });
@@ -31,7 +32,7 @@ export class MainMenu extends Phaser.Scene {
         this.music = this.sound.add('menuMusic', {volume: 0.05});
         this.music.play();
 
-        this.background = this.add.image(0, 0, "farm_background");
+        this.background = this.add.image(0, 0, "farm_filled_plants");
         this.background.setOrigin(0, 0);
 
         //let clickCount = 0;
