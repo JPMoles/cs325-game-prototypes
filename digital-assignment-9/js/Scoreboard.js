@@ -24,17 +24,6 @@ export class Scoreboard extends Phaser.Scene {
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
         const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
 
-        const menuButton = this.add.sprite(screenCenterX, screenCenterY + 100, "menuButton");
-        menuButton.setOrigin(0.5, 0.5);
-
-        menuButton.setInteractive().on("pointerover", () => {
-            menuButton.setTexture("menuButton_down");
-        }).on("pointerout", () => {
-            menuButton.setTexture("menuButton");
-        }).on('pointerup', () => {
-            this.scene.start("MainMenu");
-        });
-
         this.chickens = this.physics.add.group();
         this.chickens.create(100, 100, 'chicken');
         this.chickens.create(150, 150, 'chicken');
@@ -47,6 +36,17 @@ export class Scoreboard extends Phaser.Scene {
         }
 
         this.add.text(screenCenterX, screenCenterY, "Final Score: " + this.score, { fontSize: "36px", color: "#000" }).setOrigin(0.5, 0.5);
+
+        const menuButton = this.add.sprite(screenCenterX, screenCenterY + 100, "menuButton");
+        menuButton.setOrigin(0.5, 0.5);
+
+        menuButton.setInteractive().on("pointerover", () => {
+            menuButton.setTexture("menuButton_down");
+        }).on("pointerout", () => {
+            menuButton.setTexture("menuButton");
+        }).on('pointerup', () => {
+            this.scene.start("MainMenu");
+        });
 
     }
 

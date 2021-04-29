@@ -233,6 +233,7 @@ export class Game extends Phaser.Scene {
         this.physics.add.overlap(this.chickens, this.plantsObjects, this.chickenEatPlant, null, this);
 
         this.gameMusic.play();
+        this.gameMusic.setLoop(true);
     }
 
     pickUpPlant() {
