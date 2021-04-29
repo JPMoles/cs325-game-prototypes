@@ -674,6 +674,7 @@ export class Game extends Phaser.Scene {
         //  Stop music, delete sprites, purge caches, free resources, all that good stuff.
 
         //  Then let's go back to the main menu.
+        this.gameMusic.stop();
         this.scene.start( 'MainMenu' );
     }
 
