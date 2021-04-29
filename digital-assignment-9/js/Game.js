@@ -1,3 +1,7 @@
+
+let finalScore = 0;
+export {finalScore};
+
 export class Game extends Phaser.Scene {
 
     constructor () {
@@ -31,7 +35,12 @@ export class Game extends Phaser.Scene {
         this.plants = new Array(80);
         this.groundWatered = new Array(80);
         this.waterSound;
+        this.seedSound;
+        this.roundSound;
+        this.plantSound;
+        this.chickenSound;
         this.growthTimer;
+        this.gameMusic;
 
         this.arrayX = [0, 64, 128, 192, 256, 320, 384, 448, 512, 576];
         this.arrayY = [0, 64, 128, 192, 256, 320, 384, 448];
@@ -58,7 +67,12 @@ export class Game extends Phaser.Scene {
         this.load.image("final_plant_rainbow", "assets/final_plant_rainbow.png");
         this.load.image("static_menu", "assets/static_menu.png");
         this.load.audio("watering", "assets/splash1.mp3");
+        this.load.audio("shake_seeds", "assets/shaking_seeds.mp3");
         this.load.image("player_front_2", "assets/character_temp_front2.png");
+        this.load.audio("roundBell", "assets/ding.mp3");
+        this.load.audio("pop", "assets/pop.mp3");
+        this.load.audio("cluck", "assets/chicken_clucking.mp3");
+        this.load.audio("takeatrip", "assets/takeatrip.mp3");
     }
 
     create() {
@@ -205,11 +219,20 @@ export class Game extends Phaser.Scene {
         this.menu = this.physics.add.staticImage(0, 512, 'static_menu').setOrigin(0).refreshBody();
         this.physics.add.collider(this.player, this.menu);
 
-        this.waterSound = this.sound.add('watering', {volume: 0.2});
+        this.waterSound = this.sound.add('watering', {volume: 0.1});
+        this.seedSound = this.sound.add('shake_seeds', {volume: 0.1});
+        this.roundSound = this.sound.add('roundBell', {volume: 0.1});
+        this.plantSound = this.sound.add('pop', {volume: 0.1});
+        this.chickenSound = this.sound.add('cluck', {volume: 0.1});
+        this.gameMusic = this.sound.add('takeatrip', {volume: 0.05});
 
         this.growthTimer = 0;
         this.score = 0;
 
+        //this.physics.add.overlap(this.player, this.plantsObjects, this.playerPickupPlant, null, this);
+        this.physics.add.overlap(this.chickens, this.plantsObjects, this.chickenEatPlant, null, this);
+
+        this.gameMusic.play();
     }
 
     pickUpPlant() {
@@ -221,13 +244,14 @@ export class Game extends Phaser.Scene {
         if(this.isPlantFullyGrown(x, y)) {
             let plant = this.plants[xMultiple + (yMultiple * 10)];
 
-            if(plant.seedType == 1)
+            if(plant.seedType === 1)
                 this.score += 8;
-            else if(plant.seedType == 2)
+            else if(plant.seedType === 2)
                 this.score += Phaser.Math.Between(4, 12);
             else
                 this.score += Phaser.Math.Between(1, 15);
 
+            this.plantSound.play();
             this.scoreText.setText("Score: " + this.score);
             // set plant info object to null
             this.plants[xMultiple + (yMultiple * 10)] = null;
@@ -236,7 +260,7 @@ export class Game extends Phaser.Scene {
             let j;
             let plantsList = this.plantsObjects.getChildren();
             for(j = 0; j < plantsList.length; j++) {
-                if(plantsList[j].x == x && plantsList[j].y == y) {
+                if(plantsList[j].x === x && plantsList[j].y === y) {
                     this.plantsObjects.killAndHide(plantsList[j]);
                 }
             }
@@ -247,13 +271,29 @@ export class Game extends Phaser.Scene {
             let i;
             let groundWateredTiles = this.wateredGround.getChildren();
             for(i = 0; i < groundWateredTiles.length; i++) {
-                if(groundWateredTiles[i].x == x && groundWateredTiles[i].y == y) {
+                if(groundWateredTiles[i].x === x && groundWateredTiles[i].y === y) {
                     this.wateredGround.killAndHide(groundWateredTiles[i]);
                 }
             }
 
         }
 
+    }
+
+    removePlant(x, y) {
+        // set plant info object to null
+        this.plants[x + (y * 10)] = null;
+
+        let xPos = x * 64, yPos = y * 64;
+
+        // find plant in this.plantObjects
+        let i;
+        let plantsList = this.plantsObjects.getChildren();
+        for(i = 0; i < plantsList.length; i++) {
+            if(plantsList[i].x === xPos && plantsList[i].y === yPos) {
+                this.plantsObjects.killAndHide(plantsList[i]);
+            }
+        }
     }
 
     /*
@@ -296,7 +336,7 @@ export class Game extends Phaser.Scene {
     isPlantFullyGrown(x, y) {
         let xIndex = Math.floor(x / 64);
         let yIndex = Math.floor(y / 64);
-        return this.plants[xIndex + (yIndex * 10)] != null && this.plants[xIndex + (yIndex *10)].stage == 3;
+        return this.plants[xIndex + (yIndex * 10)] != null && this.plants[xIndex + (yIndex *10)].stage === 3;
     }
 
     initGroundWatered() {
@@ -336,6 +376,7 @@ export class Game extends Phaser.Scene {
             // play water sound here
             this.waterSound.play();
             this.wateredGround.create(x, y, 'watered_ground').setOrigin(0);
+            this.plantsObjects.setDepth(2);
             this.groundWatered[xMultiple + (yMultiple * 10)] = true;
         }
 
@@ -378,26 +419,28 @@ export class Game extends Phaser.Scene {
         let { x, y } = this.getPlayerTile();
         console.log("X: " + x + " Y: " + y);
 
-        let { xMultiple, yMultiple } = this.getPlayerIndex();
+        let { xMultiple, yMultiple } = this.getIndex(x, y);
         console.log("xIndex: " + xMultiple + " yIndex: " + yMultiple);
 
         // Need to check seeds not planted already
         console.log("Is ground tile: " + this.isGroundTile(x, y) + " Is seed planted: " + !this.isSeedPlanted(x, y));
         if(this.isGroundTile(x, y) && !this.isSeedPlanted(x, y)) {
-            console.log("got here!");
+            //console.log("got here!");
+            this.seedSound.play();
+            this.plantsObjects.setDepth(2);
             let plant = this.plantsObjects.create(x, y, 'base_plant').setOrigin(0);
             this.plants[xMultiple + (yMultiple * 10)] = new Plant(plant, xMultiple, yMultiple, this.growthTimer + 8, this.growthTimer, 0, this.seedSelected);
         }
     }
 
     isGroundTile(x, y) {
-        return (x == 64 || x == 192 || x == 320 || x == 448) && (y != 0 && y != 448);
+        return (x === 64 || x === 192 || x === 320 || x === 448) && (y !== 0 && y !== 448);
     }
 
     isSeedPlanted(x, y) {
         let xIndex = Math.floor(x / 64);
         let yIndex = Math.floor(y / 64);
-        return this.groundWatered[xIndex + (yIndex * 10)] == null;
+        return this.plants[xIndex + (yIndex * 10)] !== null;
     }
 
     isGroundWatered(x, y) {
@@ -471,7 +514,10 @@ export class Game extends Phaser.Scene {
         // new trajectory.
         //this.bouncy.rotation = this.physics.accelerateToObject( this.bouncy, this.input.activePointer, 500, 500, 500 );
 
-        if(this.roundNumber == 6) {
+        if(this.roundNumber === 6) {
+            finalScore = this.score;
+            this.gameMusic.stop();
+            this.gameMusic.destroy();
             this.scene.start("Scoreboard")
         }
 
@@ -485,6 +531,7 @@ export class Game extends Phaser.Scene {
                 }
                 if(this.timeRemaining <= 0) {
                     this.chickenSpawn = true;
+                    this.roundSound.play();
                 }
 
                 this.growthTimer++;
@@ -548,9 +595,9 @@ export class Game extends Phaser.Scene {
                             plant.plantObject.setTexture("final_plant_base");
                             break;
                         case 3:
-                            if(plant.seedType == 1) {
+                            if(plant.seedType === 1) {
                                 plant.plantObject.setTexture("final_plant_blue");
-                            } else if(plant.seedType == 2) {
+                            } else if(plant.seedType === 2) {
                                 plant.plantObject.setTexture("final_plant_green");
                             } else { // type 3
                                 plant.plantObject.setTexture("final_plant_rainbow");
@@ -568,7 +615,7 @@ export class Game extends Phaser.Scene {
     spawnChickens() {
 
         if(this.numChickens < this.roundNumber) {
-            let chicken = this.chickens.create(0, Phaser.Math.Between(0, 7) * 64, 'chicken').setOrigin(0).setVelocityX(55);
+            let chicken = this.chickens.create(-64, Phaser.Math.Between(0, 7) * 64, 'chicken').setOrigin(0).setVelocityX(55);
             //chicken.setCollideWorldBounds(true);
             //chicken.body.onWorldBounds = true;
             /*this.physics.world.on('worldbounds', () => {
@@ -577,6 +624,7 @@ export class Game extends Phaser.Scene {
             });
             */
 
+            this.chickenSound.play();
             chicken.play({ key: 'chicken_walk', repeat: -1 });
             this.numChickens++;
         }
@@ -593,10 +641,29 @@ export class Game extends Phaser.Scene {
         }
 
         console.log("Number of active chickens: " + this.chickens.countActive());
-        if(this.chickens.countActive() == 0) {
+        if(this.chickens.countActive() === 0) {
             this.chickens.clear();
             this.chickenSpawn = false; // set this.chickenSpawn = false to stop only updating chickens, and move to next round
             this.player.setTexture('player');
+        }
+
+    }
+
+    chickenEatPlant(chicken, plant) {
+
+        // get coordinates of overlap
+        let {xMultiple, yMultiple} = this.getIndex(plant.x, plant.y);
+
+        // compare to plants y coordinate and only delete if the same
+        if(chicken.y === plant.y) { // make sure on the same row
+
+            // remove plant from array (set to null)
+            // this.plants[x + (y * 10)] = null;
+
+            // delete gameobject/physics object
+            this.removePlant(xMultiple, yMultiple);
+
+            // don't need to delete water, because it should stay
         }
 
     }
