@@ -20,8 +20,8 @@ const game = new Phaser.Game({
 const game = new Phaser.Game({
     type: Phaser.AUTO,
     parent: 'game',
-    width: 640,
-    height: 600,
-    scene: [ MainMenu, Game, ScoreScreen ],
+    width: 480,
+    height: 640,
+    scene: [ Boot, MainMenu, Game, ScoreScreen ],
     physics: { default: 'arcade'},
 });
