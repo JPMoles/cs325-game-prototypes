@@ -13,14 +13,14 @@ export class Game extends Phaser.Scene {
             frameWidth: 32,
             frameHeight: 32
         });
-        this.load.spritesheet("sprEnemy0", "assets/space/sprEnemy0.png", {
+        this.load.spritesheet("sprEnemy0", "assets/space/sprEnemy0-fixed.png", {
             frameWidth: 16,
-            frameHeight: 16
+            frameHeight: 17
         });
         this.load.image("sprEnemy1", "assets/space/sprEnemy1.png");
-        this.load.spritesheet("sprEnemy2", "assets/space/sprEnemy2.png", {
+        this.load.spritesheet("sprEnemy2", "assets/space/sprEnemy2-fixed.png", {
             frameWidth: 16,
-            frameHeight: 16
+            frameHeight: 17
         });
         this.load.image("sprLaserEnemy0", "assets/space/sprLaserEnemy0.png");
         this.load.image("sprLaserPlayer", "assets/space/sprLaserPlayer.png");
