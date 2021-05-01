@@ -39,10 +39,12 @@ export class Game extends Phaser.Scene {
         this.load.audio("sndExplode1", "assets/space/sndExplode1.wav");
         this.load.audio("sndLaser", "assets/space/sndLaser.wav");
         this.load.audio("boostSound", "assets/boostSound.mp3");
+        this.load.image("heart", "assets/heart-fixed.png");
 
     }
 
     create() {
+        finalScore = 0;
 
         this.scoreText = this.add.text(20, 20, "Score: " + finalScore);
 
@@ -117,7 +119,7 @@ export class Game extends Phaser.Scene {
             if(elapsed < 1000) {
                 console.log("double clicked right");
                 //this.player.body.velocity.y = 0;
-                this.player.body.velocity.x = 500;
+                this.player.body.velocity.x = 5000;
                 this.player.body.velocity.y = Math.floor(this.player.body.velocity.y/2);
                 this.player.lastBootRight = this.getTime();
                 this.sfx.boost.play();
@@ -138,7 +140,7 @@ export class Game extends Phaser.Scene {
             if(elapsed < 1000) {
                 console.log("double clicked left");
                 //this.player.body.velocity.y = 0;
-                this.player.body.velocity.x = -500;
+                this.player.body.velocity.x = -5000;
                 this.player.body.velocity.y = Math.floor(this.player.body.velocity.y/2);
                 this.player.lastBoostLeft = this.getTime();
                 this.sfx.boost.play();
@@ -212,8 +214,12 @@ export class Game extends Phaser.Scene {
         this.physics.add.overlap(this.player, this.enemies, function(player, enemy) {
             if (!player.getData("isDead") &&
                 !enemy.getData("isDead")) {
-                player.explode(false);
-                player.onDestroy();
+                player.lives--;
+                player.scene.removeLive();
+                if(player.lives <= 0) {
+                    player.explode(false);
+                    player.onDestroy();
+                }
                 enemy.explode(true);
             }
         });
@@ -221,8 +227,12 @@ export class Game extends Phaser.Scene {
         this.physics.add.overlap(this.player, this.enemyLasers, function(player, laser) {
             if (!player.getData("isDead") &&
                 !laser.getData("isDead")) {
-                player.explode(false);
-                player.onDestroy();
+                player.lives--;
+                player.scene.removeLive();
+                if(player.lives <= 0) {
+                    player.explode(false);
+                    player.onDestroy();
+                }
                 laser.destroy();
             }
         });
@@ -230,6 +240,25 @@ export class Game extends Phaser.Scene {
         this.player.body.setCollideWorldBounds(true);
         this.player.body.setBounce(0.3);
 
+        this.hearts = this.physics.add.group({
+            key: 'heart',
+            repeat: 2,
+            setXY: { x: 390, y: 610, stepX: 35 }
+        });
+
+    }
+
+    removeLive() {
+        let smallestIndex = 0;
+        let heartArray = this.hearts.getChildren();
+        for(let i = 0; i < heartArray.length; i++) {
+            if(heartArray[i].x < heartArray[smallestIndex].x) {
+                smallestIndex = i;
+            }
+        }
+        if(heartArray.length > 0) { // has something in it
+            heartArray[smallestIndex].destroy();
+        }
     }
 
     getTime() {
@@ -401,6 +430,7 @@ class Player extends Entity {
         this.leftClicked = 0;
         this.lastBootRight = 0;
         this.lastBoostLeft = 0;
+        this.lives = 3;
     }
 
     moveUp() {
