@@ -9,6 +9,7 @@ export class Game extends Phaser.Scene {
         this.player = null;
         this.lastShot = 0;
         this.timePast = 0;
+        this.hasSkippedOnce = false;
     }
 
     preload() {
@@ -301,7 +302,15 @@ export class Game extends Phaser.Scene {
             }
             */
 
-            this.physics.accelerateToObject( this.player, this.input.activePointer, 150, 150, 200);
+            if(this.player.body.velocity.x > 500 || this.player.body.velocity.y > 500) {
+                if(this.hasSkippedOnce) {
+                    this.physics.accelerateToObject(this.player, this.input.activePointer, 150, 150, 200);
+                } else {
+                    this.hasSkippedOnce = true;
+                }
+            } else {
+                this.physics.accelerateToObject(this.player, this.input.activePointer, 150, 150, 200);
+            }
 
             // Player shooting
 
