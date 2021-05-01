@@ -22,6 +22,6 @@ const game = new Phaser.Game({
     parent: 'game',
     width: 480,
     height: 640,
-    scene: [ Boot, MainMenu, Game, ScoreScreen ],
+    scene: [ MainMenu, Game, ScoreScreen ],
     physics: { default: 'arcade'},
 });

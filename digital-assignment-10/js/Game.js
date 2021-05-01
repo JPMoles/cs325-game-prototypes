@@ -1,8 +1,14 @@
+
+let finalScore = 0;
+export {finalScore};
+
 export class Game extends Phaser.Scene {
 
     constructor() {
         super('Game');
         this.player = null;
+        this.lastShot = 0;
+        this.timePast = 0;
     }
 
     preload() {
@@ -32,12 +38,13 @@ export class Game extends Phaser.Scene {
         this.load.audio("sndExplode0", "assets/space/sndExplode0.wav");
         this.load.audio("sndExplode1", "assets/space/sndExplode1.wav");
         this.load.audio("sndLaser", "assets/space/sndLaser.wav");
+        this.load.audio("boostSound", "assets/boostSound.mp3");
 
     }
 
     create() {
 
-        this.add.text(20, 20, "game");
+        this.scoreText = this.add.text(20, 20, "Score: " + finalScore);
 
         this.anims.create({
             key: "sprEnemy0",
@@ -69,10 +76,11 @@ export class Game extends Phaser.Scene {
 
         this.sfx = {
             explosions: [
-                this.sound.add("sndExplode0"),
-                this.sound.add("sndExplode1")
+                this.sound.add("sndExplode0", { volume: 0.1 }),
+                this.sound.add("sndExplode1", { volume: 0.1 })
             ],
-            laser: this.sound.add("sndLaser", { volume: 0.1})
+            laser: this.sound.add("sndLaser", { volume: 0.02}),
+            boost: this.sound.add("boostSound", { volume: 0.2})
         };
 
         this.backgrounds = [];
@@ -80,7 +88,6 @@ export class Game extends Phaser.Scene {
             let bg = new ScrollingBackground(this, "sprBg0", i * 10);
             this.backgrounds.push(bg);
         }
-
 
         this.player = new Player(
             this,
@@ -99,10 +106,64 @@ export class Game extends Phaser.Scene {
         this.enemyLasers = this.add.group();
         this.playerLasers = this.add.group();
 
+        this.input.keyboard.on("keydown-D", () => {
+            if(this.player.rightClicked === 0 && (this.player.lastBootRight + 2000) < this.getTime()) {
+                this.player.rightClicked = this.getTime();
+                return;
+            }
+
+            let elapsed = this.getTime() - this.player.rightClicked;
+
+            if(elapsed < 1000) {
+                console.log("double clicked right");
+                //this.player.body.velocity.y = 0;
+                this.player.body.velocity.x = 500;
+                this.player.body.velocity.y = Math.floor(this.player.body.velocity.y/2);
+                this.player.lastBootRight = this.getTime();
+                this.sfx.boost.play();
+            }
+
+            this.player.rightClicked = 0;
+
+        });
+
+        this.input.keyboard.on("keydown-A", () => {
+            if(this.player.leftClicked === 0 && (this.player.lastBoostLeft + 2000) < this.getTime()) {
+                this.player.leftClicked = this.getTime();
+                return;
+            }
+
+            let elapsed = this.getTime() - this.player.leftClicked;
+
+            if(elapsed < 1000) {
+                console.log("double clicked left");
+                //this.player.body.velocity.y = 0;
+                this.player.body.velocity.x = -500;
+                this.player.body.velocity.y = Math.floor(this.player.body.velocity.y/2);
+                this.player.lastBoostLeft = this.getTime();
+                this.sfx.boost.play();
+            }
+
+            this.player.leftClicked = 0;
+
+        });
+
+        /*
+        this.input.on("pointerdown", () => {
+            let currentTime = this.getTime();
+            if(currentTime - this.lastShot > 1000) { // can shoot every 1 second
+                let laser = new PlayerLaser(this, this.player.x, this.player.y);
+                this.playerLasers.add(laser);
+                this.sfx.laser.play();
+                this.lastShot = currentTime;
+            }
+        });
+        */
+
         this.time.addEvent({
-            delay: 1000,
+            delay: 2000,
             callback: function() {
-                var enemy = null;
+                let enemy = null;
 
                 if (Phaser.Math.Between(0, 10) >= 3) {
                     enemy = new GunShip(
@@ -111,7 +172,7 @@ export class Game extends Phaser.Scene {
                         0
                     );
                 } else if (Phaser.Math.Between(0, 10) >= 5) {
-                    if (this.getEnemiesByType("ChaserShip").length < 5) {
+                    if (this.getEnemiesByType("ChaserShip").length < 3) {
 
                         enemy = new ChaserShip(
                             this,
@@ -144,6 +205,7 @@ export class Game extends Phaser.Scene {
 
                 enemy.explode(true);
                 playerLaser.destroy();
+                finalScore += 5;
             }
         });
 
@@ -165,8 +227,14 @@ export class Game extends Phaser.Scene {
             }
         });
 
+        this.player.body.setCollideWorldBounds(true);
+        this.player.body.setBounce(0.3);
 
+    }
 
+    getTime() {
+        let d = new Date();
+        return d.getTime();
     }
 
     getEnemiesByType(type) {
@@ -182,9 +250,12 @@ export class Game extends Phaser.Scene {
 
     update(time, delta) {
 
+        this.timePast += delta;
+
         if(!this.player.getData("isDead")) {
             this.player.update();
 
+            /*
             // Player movement
             if (this.keyW.isDown) {
                 this.player.moveUp();
@@ -199,12 +270,15 @@ export class Game extends Phaser.Scene {
             if (this.keyD.isDown) {
                 this.player.moveRight();
             }
+            */
+
+            this.physics.accelerateToObject( this.player, this.input.activePointer, 150, 150, 200);
 
             // Player shooting
+
             if (this.keySpace.isDown) {
                 this.player.setData("isShooting", true);
-            }
-            else {
+            } else {
                 //this.player.setData("timerShootTick", this.player.getData("timerShootDelay") - 1);
                 this.player.setData("isShooting", false);
             }
@@ -228,6 +302,7 @@ export class Game extends Phaser.Scene {
                     enemy.destroy();
                 }
             }
+            this.scoreText.setText("Score: " + finalScore);
         }
 
         // Update enemy lazers
@@ -322,7 +397,10 @@ class Player extends Entity {
         this.setData("isShooting", false);
         this.setData("timerShootDelay", 50);
         this.setData("timerShootTick", this.getData("timerShootDelay") - 1);
-
+        this.rightClicked = 0;
+        this.leftClicked = 0;
+        this.lastBootRight = 0;
+        this.lastBoostLeft = 0;
     }
 
     moveUp() {
@@ -342,10 +420,11 @@ class Player extends Entity {
     }
 
     update() {
-        this.body.setVelocity(0, 0);
+        //this.body.setVelocity(0, 0);
 
-        this.x = Phaser.Math.Clamp(this.x, 0, this.scene.game.config.width);
-        this.y = Phaser.Math.Clamp(this.y, 0, this.scene.game.config.height);
+        //this.x = Phaser.Math.Clamp(this.x, 0, this.scene.game.config.width);
+        //this.y = Phaser.Math.Clamp(this.y, 0, this.scene.game.config.height);
+
 
         if (this.getData("isShooting")) {
             if (this.getData("timerShootTick") < this.getData("timerShootDelay")) {

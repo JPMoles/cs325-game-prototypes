@@ -1,4 +1,4 @@
-import {ScrollingBackground} from "./Game.js"
+import { ScrollingBackground, finalScore } from "./Game.js";
 
 export default class ScoreScreen extends Phaser.Scene {
 
@@ -22,9 +22,18 @@ export default class ScoreScreen extends Phaser.Scene {
         });
         this.title.setOrigin(0.5);
 
+        this.scoreText = this.add.text(this.game.config.width * 0.5, 250, "Final Score: " + finalScore, {
+            fontFamily: 'Arial',
+            fontSize: 48,
+            fontStyle: 'bold',
+            color: '#ffffff',
+            align: 'center'
+        });
+        this.scoreText.setOrigin(0.5);
+
         this.sfx = {
-            btnOver: this.sound.add("sndBtnOver"),
-            btnDown: this.sound.add("sndBtnDown")
+            btnOver: this.sound.add("sndBtnOver", { volume: 0.1 }),
+            btnDown: this.sound.add("sndBtnDown", { volume: 0.1 })
         };
 
         this.btnRestart = this.add.sprite(
